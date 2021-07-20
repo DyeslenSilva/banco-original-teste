@@ -22,7 +22,12 @@ public class RoutesService {
 	
 	public void clearList() {
 		this.listaRoutes.clear();
-		//hasCycle.setHasCycle(false);
+		this.setHasCycle(false);
+	}
+	
+	
+	public void addRoute() {
+		
 		
 		
 	}

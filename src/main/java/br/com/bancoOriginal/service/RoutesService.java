@@ -35,14 +35,33 @@ public class RoutesService {
 	@Autowired
 	private RouteDistrictRepo routeDistrictRepo;
 	
-	
+	//Limpando Listas
 	public void clearList() {
 		listaRoutes.clear();
 		setHasCycle(false);
 	}
 	
+	//Limpando vertices Pai
+	public void cleanRouteDistrictDad() {
+		for(int i=0; i<this.getRouteDistricts().size(); i++) {
+			this.getRouteDistricts().get(i).setDad(null);
+		}
+	}
+	//Limpando Vertices visitadas
+	public void cleanRouteDistrictVisited() {
+		for(int i=0; i<this.getRouteDistricts().size(); i++) {
+			this.getRouteDistricts().get(i).setVisited(false);
+		}
+	}
+	//Limpando arestas visitadas
+	public void cleanRouteDistanceVisisted() {
+		for(int i =0; i<this.getRouteDistances().size(); i++) {
+			this.getRouteDistances().get(i).setVisited(false);
+		}
+	}
 	
-	public void setRouteDistance() {
+	//Arestas
+	public void setRouteDistance(ArrayList<RouteDistance> routeDistances) {
 		this.clearList();
 		
 		for(int i=0; i<routeDistances.size();i++) {
@@ -52,7 +71,27 @@ public class RoutesService {
 		}
 	}
 	
+	//Imprimido Arvore
+	public void printTree() {
+		for(int i=0; i<routeDistances.size();i++) {
+			System.out.println(this.routeDistances.get(i).getSource().getName() +
+					this.routeDistances.get(i).getTarget().getName()+" - "+
+					this.routeDistances.get(i).getWeight()+" - ");
+		}
+		
+		System.out.println();
+	}
+		
+	//Vertices
+	public void setRouteDistrict(ArrayList<RouteDistrict> routeDistricts) {
+		this.clearList();
+		
+		for(int i =0; i<routeDistricts.size();i++) {
+		}
+		
+	}
 	
+	//Adicionando aresta ou distancia entre rotas
 	public void addRouteDistance(int weight, String source,String target) {
 		int i = this.addRouteDistrict(source);
 		int j = this.addRouteDistrict(target);
@@ -94,19 +133,29 @@ public class RoutesService {
 		for(int i=0; i<this.routeDistances.size(); i++) {
 			if(this.routeDistances.get(i).getName().equals(name)) {
 				return i;
-			}else {
-				return this.routeDistances.size();
 			}
 		}
 		return this.routeDistances.size();
 	}
 	
+	//Calculando distancia ente os bairros
+	public int positionRouteDistrict(String name) {
+		for(int i=0; i>this.routeDistricts.size(); i++) {
+			if(this.routeDistricts.get(i).getName().equals(name)) {
+				return i;
+			}
+		}
+		return this.routeDistricts.size();
+	}
+	
+	//Limpando area visitada
 	public void cleanVisitedArea() {
 		for(int i =0;i<routeDistances.size();i++) {
 			this.getRouteDistances().get(i).setVisited(false);
 		}
 	}
 	
+	//Verificando existencia de ciclo
 	public boolean isCycle(RouteDistance routeDistance) {
 		RouteDistrict previous = routeDistance.getTarget();
 		

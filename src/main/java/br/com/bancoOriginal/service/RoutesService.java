@@ -3,14 +3,15 @@ package br.com.bancoOriginal.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.com.bancoOriginal.grafo.model.RouteDistance;
 import br.com.bancoOriginal.grafo.model.RouteDistrict;
+import br.com.bancoOriginal.grafo.repo.RouteDistanceRepo;
+import br.com.bancoOriginal.grafo.repo.RouteDistrictRepo;
 import br.com.bancoOriginal.model.Routes;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Service
@@ -28,11 +29,28 @@ public class RoutesService {
 	private ArrayList<RouteDistrict> routeDistricts = new ArrayList<RouteDistrict>();
 	
 	
+	@Autowired
+	private RouteDistanceRepo routeDistanceRepo;
+	
+	@Autowired
+	private RouteDistrictRepo routeDistrictRepo;
+	
+	
 	public void clearList() {
 		listaRoutes.clear();
 		setHasCycle(false);
 	}
 	
+	
+	public void setRouteDistance() {
+		this.clearList();
+		
+		for(int i=0; i<routeDistances.size();i++) {
+			this.addRouteDistance(routeDistances.get(i).getWeight(),
+					routeDistances.get(i).getSource().getName(),
+					routeDistances.get(i).getTarget().getName());
+		}
+	}
 	
 	
 	public void addRouteDistance(int weight, String source,String target) {
@@ -51,6 +69,8 @@ public class RoutesService {
 		this.routeDistricts.get(i).addIncidents(this.routeDistances.get(k-1));
 		this.routeDistricts.get(j).addIncidents(this.routeDistances.get(k-1));
 		
+		
+		routeDistanceRepo.addRouteDistance(weight, source, target);
 	}
 	
 	
@@ -61,8 +81,10 @@ public class RoutesService {
 		if(i==this.routeDistricts.size()) {
 			this.routeDistricts.add(new RouteDistrict(name));
 			return (this.routeDistricts.size() - i);
+			
 		}
 		
+		routeDistrictRepo.addRouteDistrict(name);
 		return i;
 	}
 	
@@ -122,5 +144,8 @@ public class RoutesService {
 		this.hasCycle = false;
 		return false;
 	}
+	
+	
+	
 	
 }

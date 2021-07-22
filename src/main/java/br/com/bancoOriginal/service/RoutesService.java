@@ -237,4 +237,33 @@ public class RoutesService {
 	}
 	
 	
+	//Retorna menor distancia entre as rotas
+	public RouteDistance lowerWieght() {
+		int j;
+		for(j=0;j<this.getRouteDistances().size(); j++) {
+			if((this.getRouteDistances().get(j).isVisited()==false)) {
+				this.getRouteDistances().get(j).setVisited(true);
+				
+				for(int i=(j+1); i<this.getRouteDistances().size(); i++) {
+					if((this.getRouteDistances().get(i).isVisited()==true)&&
+							(this.getRouteDistances().get(j).getWeight() >
+					this.getRouteDistances().get(i).getWeight())) {
+						this.getRouteDistances().get(j).setVisited(false);
+						j=i;
+						this.getRouteDistances().get(j).setVisited(true);
+					}
+				}
+				break;
+			}
+			
+		}
+		
+		return this.getRouteDistances().get(j);	
+	}
+	
+	
+	
+	
+	
+	
 }

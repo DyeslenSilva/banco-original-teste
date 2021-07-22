@@ -22,10 +22,10 @@ public class RoutesService {
 	@Getter @Setter
 	private boolean hasCycle = false;
 	
-	@Getter @Setter
+	@Getter 
 	private ArrayList<RouteDistance> routeDistances = new ArrayList<RouteDistance>();
 	
-	@Getter @Setter
+	@Getter 
 	private ArrayList<RouteDistrict> routeDistricts = new ArrayList<RouteDistrict>();
 	
 	
@@ -87,6 +87,30 @@ public class RoutesService {
 		this.clearList();
 		
 		for(int i =0; i<routeDistricts.size();i++) {
+			if(this.positionRouteDistrict(routeDistricts.get(i).getName())==
+					this.routeDistricts.size()) {
+				for(int j=0; j<routeDistricts.get(i).getIncidents().size(); j++) {
+					if(routeDistricts.get(i).getName().equals(routeDistricts.get(i).getIncidents()
+							.get(j).getSource().getName())&&(this.positionRouteDistrict(routeDistricts
+									.get(i).getIncidents().get(j)
+									.getTarget().getName())!=this.routeDistricts.size())) {
+						
+					this.addRouteDistance(routeDistricts.get(i).getIncidents().get(j).getWeight(),
+							routeDistricts.get(i).getIncidents().get(j).getSource().getName(),
+							routeDistricts.get(i).getIncidents().get(j).getTarget().getName());
+					
+					}else if((routeDistricts.get(i).getName().equals(routeDistricts.get(i).getIncidents().get(j).getTarget().getName()))&&
+							(this.positionRouteDistrict(routeDistricts.get(i).getIncidents().get(j).getSource().getName())!=this.routeDistricts.size())) {
+						
+						this.addRouteDistance(routeDistricts.get(i).getIncidents().get(j).getWeight(),
+								routeDistricts.get(i).getIncidents().get(j).getSource().getName(),
+									routeDistricts.get(i).getIncidents().get(j).getTarget().getName());
+					}
+				}
+				
+				this.addRouteDistrict(routeDistricts.get(i).getName());
+			}
+		
 		}
 		
 	}
@@ -194,7 +218,23 @@ public class RoutesService {
 		return false;
 	}
 	
+	//Encontrar Vertice (Bairro especifíco)
+	public RouteDistrict findRouteDistrict(String nome) {
+		return this.routeDistricts.get(this.positionRouteDistrict(nome));
+	}
 	
+	//Encontrar Aresta (Distancia entre bairros)
+	public RouteDistance findRouteDistance(RouteDistance routeDistance1,RouteDistance routeDistance2) {
+		for(int i=0; i<this.routeDistances.size(); i++) {
+			if(((this.routeDistances.get(i).getSource().getName().equals(routeDistance1.getName()))&&
+					(this.routeDistances.get(i).getTarget().getName().equals(routeDistance2.getName()))||
+					((this.routeDistances.get(i).getSource().getName().equals(routeDistance2.getName()))&&
+						this.routeDistances.get(i).getTarget().getName().equals(routeDistance1.getName())	))) {
+				return this.routeDistances.get(i);
+			}
+		}
+		return null;
+	}
 	
 	
 }

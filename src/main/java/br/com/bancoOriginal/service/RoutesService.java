@@ -1,7 +1,9 @@
 package br.com.bancoOriginal.service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -224,7 +226,7 @@ public class RoutesService {
 	}
 	
 	//Encontrar Aresta (Distancia entre bairros)
-	public RouteDistance findRouteDistance(RouteDistance routeDistance1,RouteDistance routeDistance2) {
+	public RouteDistance findRouteDistance(RouteDistrict routeDistance1,RouteDistrict routeDistance2) {
 		for(int i=0; i<this.routeDistances.size(); i++) {
 			if(((this.routeDistances.get(i).getSource().getName().equals(routeDistance1.getName()))&&
 					(this.routeDistances.get(i).getTarget().getName().equals(routeDistance2.getName()))||
@@ -262,6 +264,70 @@ public class RoutesService {
 	}
 	
 	
+	public ArrayList<RouteDistrict> leastCostlyWay(RouteDistrict rd1, RouteDistrict rd2){
+		
+		ArrayList<RouteDistrict> leastWay = new ArrayList<RouteDistrict>();
+		
+		RouteDistrict rdWay;
+		RouteDistrict rdActual;
+		RouteDistrict neighbor;
+		RouteDistance link;
+		
+		ArrayList<RouteDistrict> notVisited = new ArrayList<RouteDistrict>();
+		
+		leastWay.add(rd1);
+		
+		for(int i=0; i<this.getRouteDistricts().size(); i++) {
+			if(this.getRouteDistricts().get(i).getName().equals(rd1.getName())) {
+				
+				this.getRouteDistricts().get(i).setDistance(0);
+		
+			}else {
+				this.getRouteDistricts().get(i).setDistance(9999);
+				notVisited.add(this.getRouteDistricts().get(i));
+			}
+		}
+		
+		Collections.sort(notVisited);
+		
+		while(!notVisited.isEmpty()) {
+			rdActual= notVisited.get(0);
+		
+			for(int i=0; i<rdActual.getNeighbors().size(); i++) {
+				neighbor = rdActual.getNeighbors().get(i);
+				
+				if(!neighbor.isVisited()) {
+					link = this.findRouteDistance(rdActual, neighbor);
+					if(neighbor.getDistance() > (rdActual.getDistance() + link.getWeight())) {
+						neighbor.setDistance(rdActual.getDistance()+link.getWeight());
+						neighbor.setDad(rdActual);
+						
+						if(neighbor==rd2) {
+							leastWay.clear();
+							rdWay = neighbor;
+							leastWay.add(neighbor);
+							while(rdWay.getDad() !=null) {
+								leastWay.add(rdWay.getDad());
+								rdWay = rdWay.getDad();
+							}
+							
+							Collections.sort(leastWay);
+						}
+					}
+				}
+			}
+			
+			rdActual.setVisited(true);
+			notVisited.remove(rdActual);
+			
+			
+			Collections.sort(notVisited);
+		}
+		
+		this.cleanRouteDistrictDad();
+		return leastWay;
+		
+	}
 	
 	
 	

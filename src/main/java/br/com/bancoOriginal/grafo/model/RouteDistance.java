@@ -14,6 +14,7 @@ public class RouteDistance {
 	private String name;
 	private RouteDistrict source;
 	private RouteDistrict target;
+	private RouteDistrict neighbor;
 	private boolean visited = false;
 
 

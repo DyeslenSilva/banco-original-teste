@@ -19,6 +19,9 @@ import lombok.Setter;
 @Service
 public class RoutesService {
 
+	@Getter @Setter
+	private int distance;
+	
 	private List<Routes> listaRoutes = new ArrayList<Routes>();
 	
 	@Getter @Setter
@@ -30,6 +33,8 @@ public class RoutesService {
 	@Getter 
 	private ArrayList<RouteDistrict> routeDistricts = new ArrayList<RouteDistrict>();
 	
+	private ArrayList<RouteDistrict> routesAvaliable = new ArrayList<RouteDistrict>();
+
 	
 	@Autowired
 	private RouteDistanceRepo routeDistanceRepo;
@@ -239,6 +244,9 @@ public class RoutesService {
 	}
 	
 	
+	
+	
+	
 	//Retorna menor distancia entre as rotas
 	public RouteDistance lowerWieght() {
 		int j;
@@ -263,8 +271,8 @@ public class RoutesService {
 		return this.getRouteDistances().get(j);	
 	}
 	
-	
-	public ArrayList<RouteDistrict> leastCostlyWay(RouteDistrict rd1, RouteDistrict rd2){
+	//Encontra o caminho mais curto
+	public ArrayList<RouteDistrict> leastCostlyWayDijkstra(RouteDistrict rd1, RouteDistrict rd2){
 		
 		ArrayList<RouteDistrict> leastWay = new ArrayList<RouteDistrict>();
 		
@@ -330,6 +338,55 @@ public class RoutesService {
 	}
 	
 	
+	public boolean recursiveSearch(String source, String searching) {
+		int posSource = this.positionRouteDistrict(source);
+		
+		this.routeDistricts.get(posSource).setVisited(true);
+		
+		if(!source.equals(searching)) {
+			for(int i=0; i<this.routeDistricts.get(posSource).getNeighbors().size(); i++) {
+				if(!this.routeDistricts.get(posSource).getNeighbors().get(i).isVisited()) {
+					this.findRouteDistance(this.routeDistricts.get(posSource), 
+							this.routeDistricts.get(posSource).getNeighbors().get(i)).setVisited(true);
+					
+					if(this.recursiveSearch(this.routeDistricts.get(posSource).getNeighbors().get(i).getName(),
+							searching))
+						return true;
+					
+				}
+			}
+		}else {
+			return true;
+		}
+		return false;
+	}
+	
+	public void markRouteDistrict(String routeDistrict) {
+		int posSource = this.positionRouteDistrict(routeDistrict);
+		
+		this.routeDistricts.get(posSource).setVisited(true);
+		
+		for(int i=0; i<this.routeDistricts.get(posSource).getNeighbors().size(); i++) {
+			if(!this.routeDistricts.get(posSource).getNeighbors().get(i).isVisited()) {
+				this.markRouteDistrict(this.routeDistricts.get(posSource).getNeighbors().get(i).getName());
+			}
+		}
+	}
 	
 	
+	//Descobrir possiveis rotas
+	public ArrayList<RouteDistrict> avaliableRoutes(int maxStops, RouteDistance rd1, RouteDistance rd2){
+		
+		for(int i=0; i<this.routesAvaliable.size(); i++) {
+			if(maxStops==0) {
+				System.out.println(routesAvaliable.get(i));
+			}else {
+				return routesAvaliable;
+			}			
+		}
+		return routesAvaliable;
+	}
+	
+	
+//	public int 
 }

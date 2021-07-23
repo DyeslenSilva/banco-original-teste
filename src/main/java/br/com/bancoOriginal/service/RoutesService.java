@@ -388,5 +388,18 @@ public class RoutesService {
 	}
 	
 	
-//	public int 
+	@SuppressWarnings("unused")
+	public int minimiumDistanceDistrict(RouteDistrict rd1, RouteDistrict rd2) {
+		for(int i=0;i<this.routeDistricts.size(); i++) {
+			for(int j=0; j<this.routeDistricts.size(); j++) {
+				if(routeDistricts.get(i).equals(routeDistricts.get(j))) {
+					return 0;
+				}else {
+					return 1;
+				}
+			}
+		}
+		
+		return routeDistricts.size();
+	}
 }

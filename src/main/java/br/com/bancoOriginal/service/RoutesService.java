@@ -406,7 +406,7 @@ public class RoutesService {
 	
 	public void addGraph(RouteDistance routeDistance, RouteDistrict routeDistrict) {
 		for(int i = 0; i<routeDistances.size(); i++) {
-			for(int j =0; i<routeDistricts.size(); i++) {
+			for(int j =0; j<routeDistricts.size(); j++) {
 				routeDistances.add(routeDistance);
 				routeDistricts.add(routeDistrict);
 			}

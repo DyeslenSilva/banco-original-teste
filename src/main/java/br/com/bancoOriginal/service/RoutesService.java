@@ -414,4 +414,19 @@ public class RoutesService {
 	}
 	
 	
+	public boolean addGraph(String idRoute, RouteDistance routeDistance,RouteDistrict routeDistrict) {
+		boolean routeDistance2= routeDistances.add(routeDistance);
+		boolean routeDistrict2= routeDistricts.add(routeDistrict);
+		
+		
+		if(routeDistance2==true && routeDistrict2==true) {
+			return true;
+		}else {
+			return false;
+		}
+		
+		
+	}
+	
+	
 }

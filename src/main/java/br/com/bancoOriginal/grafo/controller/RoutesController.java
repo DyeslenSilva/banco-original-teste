@@ -56,6 +56,14 @@ public class RoutesController {
 	}
 	
 	
+	@RequestMapping(path = "/distance", method = RequestMethod.POST)
+	public ResponseEntity<RouteDistance> totalDistance(RouteDistrict rd1, RouteDistrict rd2){
+
+		routesService.findRouteDistance(rd1, rd2);
+			
+		return ResponseEntity.ok().build();
+	}
+	
 	
 	
 	

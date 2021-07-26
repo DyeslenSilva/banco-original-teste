@@ -18,7 +18,7 @@ class DistanceRouteAtoC {
 	private RoutesService routesService;
 
 	
-	void routeToABC(int maxRoutes,RouteDistance routeDistance1, RouteDistance routeDistance2) {
+	void routeToABC(RouteDistance routeDistance1, RouteDistance routeDistance2) {
 		when(routesService.avaliableRoutes(2, routeDistance1, routeDistance2)).then((Answer<?>) routesService.getRouteDistances());
 	}
 	
@@ -27,14 +27,12 @@ class DistanceRouteAtoC {
 	}
 
 	
-	void routeToAEBC() {
-		
+	void routeAEBC(RouteDistance routeDistance1, RouteDistance routeDistance2) {
+		when(routesService.avaliableRoutes(3, routeDistance1, routeDistance2)).then((Answer<?>) routesService.getRouteDistances());
 	}
 	
-	void routeToAEDBC(RouteDistance routeDistance1, RouteDistance routeDistance2) {
+	void routeADEBC(RouteDistance routeDistance1, RouteDistance routeDistance2) {
 		when(routesService.avaliableRoutes(4, routeDistance1, routeDistance2)).then((Answer<?>) routesService.getRouteDistances());
 	}
-	
-	
 	
 }
